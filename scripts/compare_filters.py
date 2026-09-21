@@ -1,6 +1,14 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+RESULTS_DIR = ROOT / "results"
+FIGURES_DIR = RESULTS_DIR / "figures"
+
+FIGURES_DIR.mkdir(parents=True, exist_ok=True)
+
 
 kf = pd.read_csv("results/kalman_filter.csv")
 pf = pd.read_csv("results/particle_filter_serial.csv")
@@ -25,5 +33,16 @@ plt.title("Kalman Filter vs Bootstrap Particle Filter")
 plt.legend()
 plt.grid(alpha=0.3)
 plt.tight_layout()
+
+plt.savefig(
+    FIGURES_DIR / "filter_comparison.png",
+    dpi=300,
+    bbox_inches="tight"
+)
+
+plt.savefig(
+    FIGURES_DIR / "filter_comparison.pdf",
+    bbox_inches="tight"
+)
 
 plt.show()

@@ -1,0 +1,133 @@
+\documentclass[11pt]{article}
+
+% ============================================================
+% Packages
+% ============================================================
+
+\usepackage[margin=1in]{geometry}
+
+% Mathematics
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathtools}
+
+% Figures and tables
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{subcaption}
+
+% Units and numbers
+\usepackage{siunitx}
+
+% Typography
+\usepackage{microtype}
+
+% Links and references
+\usepackage{xcolor}
+\usepackage[
+colorlinks=true,
+linkcolor=blue,
+citecolor=blue,
+urlcolor=blue
+]{hyperref}
+
+\usepackage[nameinlink,noabbrev]{cleveref}
+
+
+% ============================================================
+% Figure paths
+% ============================================================
+
+\graphicspath{
+	{figures/}
+	{figures/stage1/}
+	{figures/stage2/}
+	{figures/stage3/}
+	{figures/stage4/}
+	{figures/stage5/}
+}
+
+
+% ============================================================
+% Document metadata
+% ============================================================
+
+\title{
+	\textbf{Parallel Stochastic Filtering}\\[0.4em]
+	\large From Shared-Memory Particle Filtering to Hybrid Parallel Methods
+}
+
+\author{
+	Siddhartha Gupte\\
+	Parallel Computing
+}
+
+\date{\today}
+
+
+% ============================================================
+% Document
+% ============================================================
+
+\begin{document}
+	
+	\maketitle
+	
+	\begin{abstract}
+		
+		This project studies stochastic filtering as a progressively more
+		challenging parallel-computing problem. Beginning with a linear-Gaussian
+		state-space model and an exact Kalman-filter benchmark, a bootstrap
+		particle filter is developed, validated, and parallelized using OpenMP.
+		Subsequent stages extend the framework to nonlinear filtering, parallel
+		resampling, coupled fine--coarse simulations, distributed-memory
+		execution with MPI, and hybrid MPI/OpenMP methods. The emphasis is on
+		both numerical accuracy and computational scalability, with particular
+		attention to synchronization, reductions, communication, and serial
+		bottlenecks.
+		
+	\end{abstract}
+	
+	\tableofcontents
+	\newpage
+	
+	
+	% ============================================================
+	% Report sections
+	% ============================================================
+	
+	\input{sections/section0_intro}
+	\input{sections/section0_theory}
+	
+	% Stage I
+	\newpage
+	\input{sections/section1}
+	
+	% Stage II
+	% \input{sections/section2}
+	
+	% Stage III
+	% \input{sections/section3}
+	
+	% Stage IV
+	% \input{sections/section4}
+	
+	% Stage V
+	% \input{sections/section5}
+	
+	
+	% ============================================================
+	% Bibliography
+	% ============================================================
+	
+	% We can add BibTeX/Biber once we begin citing literature.
+	%
+	% Example later:
+	%
+	% \bibliographystyle{plain}
+	% \bibliography{references}
+	
+	
+\end{document}

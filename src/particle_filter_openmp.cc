@@ -10,7 +10,7 @@
 
 #include <omp.h>
 
-int main()
+int main(int argc, char* argv[])
 {
     // ============================================================
     // Read simulated state-space data
@@ -64,7 +64,11 @@ int main()
     constexpr double C{1.0};
     constexpr double SIGMA_Y{1.0};
 
-    constexpr std::size_t N_PARTICLES{500000};
+    std::size_t N_PARTICLES{100000};
+    if (argc > 1)
+    {
+        N_PARTICLES = std::stoull(argv[1]);
+    }
     constexpr int PF_SEED{12345};
 
     // time elapsed
@@ -83,6 +87,7 @@ int main()
 
     std::vector<double> pf_mean(values.size());
 
+    double total_start = omp_get_wtime();
     // ============================================================
     // t = 0
     //
@@ -105,7 +110,7 @@ int main()
         rngs[thread_id].seed(seed);
     }
 
-    #pragma omp parallel reduction(+:weight_sum)
+    #pragma omp parallel 
     {
         int thread_id = omp_get_thread_num();
         auto& local_rng = rngs[thread_id];
@@ -126,6 +131,56 @@ int main()
         }
     }
 
+    // weight_sum = 0.0;
+
+    // #pragma omp parallel for schedule(static)
+    // for (std::size_t i = 0; i < N_PARTICLES; ++i)
+    // {
+    //     weight_sum += weights[i];
+    // }
+
+    // double correct_weight_sum{0.0};
+
+    // for (std::size_t i = 0; i < N_PARTICLES; ++i)
+    // {
+    //     correct_weight_sum += weights[i];
+    // }
+
+    // double critical_sum{0.0};
+
+    // double start = omp_get_wtime();
+
+    // #pragma omp parallel for schedule(static)
+    // for (std::size_t i = 0; i < N_PARTICLES; ++i)
+    // {
+    //     #pragma omp critical
+    //     {
+    //         critical_sum += weights[i];
+    //     }
+    // }
+
+    // double critical_time = omp_get_wtime() - start;
+
+    // double reduction_sum{0.0};
+
+    // double reduction_start = omp_get_wtime();
+
+    // #pragma omp parallel for schedule(static) reduction(+:reduction_sum)
+    // for (std::size_t i = 0; i < N_PARTICLES; ++i)
+    // {
+    //     reduction_sum += weights[i];
+    // }
+
+    // double reduction_time = omp_get_wtime() - reduction_start;
+
+    // std::cout << "Reduction sum:  " << reduction_sum << '\n';
+    // std::cout << "Correct sum:    " << correct_weight_sum << '\n';
+    // std::cout << "Reduction time: " << reduction_time << " s\n";
+
+    // std::cout << "Critical sum: " << critical_sum << '\n';
+    // std::cout << "Correct sum:  " << correct_weight_sum << '\n';
+    // std::cout << "Critical time: " << critical_time << " s\n";
+
     if (weight_sum == 0.0)
     {
         std::cerr << "Particle weights collapsed at t = 0.\n";
@@ -138,7 +193,6 @@ int main()
     {
         weights[i] /= weight_sum;
     }
-
 
     // Posterior mean estimate E[X_0 | Y_0]
     double posterior_mean_0{0.0};
@@ -243,6 +297,7 @@ int main()
         particles.swap(resampled_particles);
         time_resampling += omp_get_wtime() - start;
     }
+    double total_runtime = omp_get_wtime() - total_start;
 
 
 
@@ -250,6 +305,7 @@ int main()
     std::cout << "Normalization:            " << time_normalization << " s\n";
     std::cout << "Posterior mean:            " << time_mean << " s\n";
     std::cout << "Resampling:                " << time_resampling << " s\n";
+    std::cout << "Runtime: " << total_runtime << " seconds\n";
 
 
     // ============================================================

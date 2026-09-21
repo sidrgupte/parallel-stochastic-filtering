@@ -1,2 +1,38 @@
+# ============================================================
+# Build
+# ============================================================
 build/
-*.csv
+
+# ============================================================
+# Python
+# ============================================================
+__pycache__/
+*.pyc
+
+# ============================================================
+# LaTeX build files
+# ============================================================
+*.aux
+*.log
+*.out
+*.toc
+*.synctex.gz
+*.fls
+*.fdb_latexmk
+*.bbl
+*.blg
+
+# ============================================================
+# Generated simulation/filter outputs
+# ============================================================
+results/state_space.csv
+results/kalman_filter.csv
+results/particle_filter_serial.csv
+results/particle_filter_serial_N*.csv
+results/particle_filter_openmp_N*.csv
+
+# Generated preview figures
+results/figures/
+
+# Local long-form report drafts
+report/sections/*_long.tex

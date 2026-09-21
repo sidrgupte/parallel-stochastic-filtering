@@ -1,0 +1,43 @@
+\section{Introduction}
+\label{sec:introduction}
+
+Stochastic filtering concerns the estimation of a time-varying hidden
+state from noisy observations. The problem appears in many settings where
+the quantity of interest cannot be measured directly but must instead be
+inferred sequentially as new data arrive.
+
+For linear systems with Gaussian noise, the filtering distribution can be
+computed exactly using the Kalman filter. More general models typically
+require numerical approximations. Particle filtering provides one such
+approach by representing the filtering distribution with a collection of
+weighted samples, or particles. Increasing the number of particles
+improves the Monte Carlo approximation, but also increases the
+computational cost.
+
+Particle filters are particularly interesting from a parallel-computing
+perspective. Propagation and likelihood evaluation can be carried out
+independently across particles, while operations such as normalization,
+estimation, and resampling require some form of global coordination.
+The algorithm therefore contains both naturally parallel work and
+potential scalability bottlenecks.
+
+This project studies that interaction between filtering algorithms and
+parallel computation. The work is organized in stages, with each stage
+building on the previous implementation.
+
+Stage~I uses a scalar linear-Gaussian model for which the Kalman filter
+provides an exact benchmark. A bootstrap particle filter is first
+validated against this reference solution and is then parallelized using
+OpenMP. The resulting implementation is used to study race conditions,
+reductions, strong scaling, and the effect of serial components on
+end-to-end performance.
+
+Later stages will extend the filtering and parallel-computing framework
+as the project develops. The common questions are how accurately the
+filter approximates the desired state distribution, which parts of the
+algorithm can be parallelized effectively, and which operations ultimately
+limit scalability.
+
+Section~\ref{sec:background} summarizes the filtering concepts needed
+for Stage~I. The remaining sections describe the individual stages,
+their implementations, and their numerical and performance results.

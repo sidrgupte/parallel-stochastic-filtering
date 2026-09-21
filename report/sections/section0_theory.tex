@@ -1,0 +1,152 @@
+\section{Background}
+\label{sec:background}
+
+\subsection{State-Space Models and Bayesian Filtering}
+\label{subsec:state-space-models}
+
+A discrete-time state-space model consists of an unobserved state
+\(X_t\) and an observation \(Y_t\),
+
+\begin{align}
+	X_t &\sim p(x_t\mid x_{t-1}), \\
+	Y_t &\sim p(y_t\mid x_t).
+\end{align}
+
+The filtering problem is to compute the conditional distribution
+
+\begin{equation}
+	p(x_t\mid y_{0:t}),
+\end{equation}
+
+where \(y_{0:t}\) denotes all observations available through time \(t\).
+
+The recursion consists of a prediction step,
+
+\begin{equation}
+	p(x_t\mid y_{0:t-1})
+	=
+	\int
+	p(x_t\mid x_{t-1})
+	p(x_{t-1}\mid y_{0:t-1})
+	\,dx_{t-1},
+\end{equation}
+
+followed by a correction after observing \(y_t\),
+
+\begin{equation}
+	p(x_t\mid y_{0:t})
+	\propto
+	p(y_t\mid x_t)
+	p(x_t\mid y_{0:t-1}).
+\end{equation}
+
+
+\subsection{Kalman Filtering}
+\label{subsec:kalman-filter}
+
+For a linear-Gaussian model,
+
+\begin{align}
+	X_t &= A X_{t-1} + \varepsilon_t,
+	& \varepsilon_t &\sim \mathcal{N}(0,Q), \\
+	Y_t &= C X_t + \eta_t,
+	& \eta_t &\sim \mathcal{N}(0,R),
+\end{align}
+
+the filtering distribution remains Gaussian. It is therefore sufficient
+to update its mean and variance.
+
+If \(m_t^{-}\) and \(P_t^{-}\) denote the predictive mean and variance,
+the scalar Kalman update is
+
+\begin{align}
+	K_t &=
+	\frac{P_t^- C}{C^2P_t^-+R}, \\
+	m_t &=
+	m_t^- + K_t(Y_t-Cm_t^-), \\
+	P_t &=
+	(1-K_tC)P_t^-,
+\end{align}
+
+with prediction
+
+\begin{align}
+	m_{t+1}^- &= A m_t, \\
+	P_{t+1}^- &= A^2P_t + Q.
+\end{align}
+
+For the linear-Gaussian model used in Stage~I, these recursions provide
+the exact filtering mean and therefore a convenient benchmark.
+
+
+\subsection{Particle Filtering}
+\label{subsec:particle-filtering}
+
+A particle filter approximates the filtering distribution using weighted
+samples,
+
+\begin{equation}
+	p(x_t\mid y_{0:t})
+	\approx
+	\sum_{i=1}^{N}
+	w_t^{(i)}
+	\delta_{X_t^{(i)}}(x_t),
+\end{equation}
+
+with normalized weights satisfying
+
+\begin{equation}
+	\sum_{i=1}^{N} w_t^{(i)} = 1.
+\end{equation}
+
+In a bootstrap particle filter, particles are propagated using the state
+transition,
+
+\begin{equation}
+	X_t^{(i)}
+	\sim
+	p(x_t\mid X_{t-1}^{(i)}),
+\end{equation}
+
+and weighted according to the observation likelihood,
+
+\begin{equation}
+	\widetilde{w}_t^{(i)}
+	=
+	p(y_t\mid X_t^{(i)}).
+\end{equation}
+
+After normalization,
+
+\begin{equation}
+	w_t^{(i)}
+	=
+	\frac{\widetilde{w}_t^{(i)}}
+	{\sum_{j=1}^{N}\widetilde{w}_t^{(j)}},
+\end{equation}
+
+quantities such as the filtered mean can be estimated by
+
+\begin{equation}
+	\widehat{X}_t
+	=
+	\sum_{i=1}^{N} w_t^{(i)}X_t^{(i)}.
+\end{equation}
+
+The particle population is then resampled according to the normalized
+weights. Since the method is Monte Carlo, its statistical error is
+expected to decrease at the usual \(O(N^{-1/2})\) rate under standard
+conditions.
+
+
+\subsection{Parallel Structure}
+\label{subsec:pf-parallel-structure}
+
+Particle propagation and likelihood evaluation are independent across
+particles and are therefore natural targets for data parallelism.
+Normalization and posterior estimation require reductions over the
+particle population, while resampling depends on the full set of
+weights.
+
+The distinction between particle-local work and global operations is the
+main computational issue considered in Stage~I.

@@ -1,0 +1,4 @@
+threads,propagation_likelihood,normalization,posterior_mean,resampling,total_runtime
+1,6.87557,0.142093,0.15756,38.4944,45.9446
+4,2.32731,0.0939147,0.0888727,40.1563,42.9614
+16,1.01447,0.120058,0.0800961,38.0565,39.5663

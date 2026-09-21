@@ -1,9 +1,16 @@
 import glob
 import re
+from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+
+ROOT = Path(__file__).resolve().parents[1]
+RESULTS_DIR = ROOT / "results"
+FIGURES_DIR = RESULTS_DIR / "figures"
+
+FIGURES_DIR.mkdir(parents=True, exist_ok=True)
 
 
 # Read exact Kalman benchmark
@@ -76,4 +83,16 @@ plt.title("Bootstrap Particle Filter Convergence to Kalman Filter")
 plt.grid(alpha=0.3)
 plt.legend()
 plt.tight_layout()
+
+plt.savefig(
+    FIGURES_DIR / "serial_pf_convergence.png",
+    dpi=300,
+    bbox_inches="tight"
+)
+
+plt.savefig(
+    FIGURES_DIR / "serial_pf_convergence.pdf",
+    bbox_inches="tight"
+)
+
 plt.show()

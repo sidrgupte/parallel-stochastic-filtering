@@ -1,7 +1,13 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+from pathlib import Path
 
+ROOT = Path(__file__).resolve().parents[1]
+RESULTS_DIR = ROOT / "results"
+FIGURES_DIR = RESULTS_DIR / "figures"
+
+FIGURES_DIR.mkdir(parents=True, exist_ok=True)
 
 df = pd.read_csv("results/kalman_filter.csv")
 
@@ -31,4 +37,16 @@ plt.legend()
 plt.grid(alpha=0.3)
 
 plt.tight_layout()
+
+plt.savefig(
+    FIGURES_DIR / "kalman_filter.png",
+    bbox_inches="tight",
+    dpi=300
+)
+
+plt.savefig(
+    FIGURES_DIR / "kalman_filter.pdf",
+    bbox_inches="tight",
+)
+
 plt.show()
