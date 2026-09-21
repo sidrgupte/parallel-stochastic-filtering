@@ -2,13 +2,13 @@
 
 A progressive study of stochastic filtering through the lens of parallel computing.
 
-The project starts from a setting where the filtering problem is exactly solvable, builds a particle-filtering implementation from that baseline, and then studies where parallelism helps—and where it does not.
+The project starts from a setting where the filtering problem is exactly solvable, builds a particle-filtering implementation from that baseline, and then studies where parallelism helps, and where it does not.
 
 The codebase is written primarily in **C++23**, with **OpenMP** for shared-memory parallelism and Python for analysis and visualization.
 
 ---
 
-## Stage I — Linear-Gaussian Filtering with OpenMP
+## Stage I - Linear-Gaussian Filtering with OpenMP
 
 The first stage uses a scalar linear-Gaussian state-space model,
 
@@ -87,7 +87,7 @@ runs the OpenMP particle filter with 8 threads and 100,000 particles.
 
 The accompanying report contains the numerical results, OpenMP experiments, and performance analysis:
 
-**[Parallel Stochastic Filtering — current report](report/main.pdf)**
+**[Parallel Stochastic Filtering - Current Report](report/main.pdf)**
 
 The report is updated as each stage is completed.
 
@@ -97,7 +97,7 @@ The report is updated as each stage is completed.
 
 | Stage | Status |
 |---|---|
-| I — Linear-Gaussian benchmark and OpenMP particle filter | **Complete** |
+| I - Linear-Gaussian benchmark and OpenMP particle filter | **Complete** |
 | II | In development |
 | III | Planned |
 | IV | Planned |
