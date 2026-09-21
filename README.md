@@ -91,8 +91,8 @@ The report is updated as each stage is completed.
 
 | Stage | Status |
 |---|---|
-| I - SLinear-Gaussian benchmark and OpenMP particle filter | **Complete** |
-| II | In development |
+| I - Linear-Gaussian benchmark and OpenMP particle filter | **Complete** |
+| II | Planned |
 | III | Planned |
 | IV | Planned |
 | V | Planned |
