@@ -12,11 +12,7 @@ The codebase is written primarily in **C++23**, with **OpenMP** for shared-memor
 
 The first stage uses a scalar linear-Gaussian state-space model,
 
-\[
-X_t = 0.9X_{t-1} + 0.5\varepsilon_t,
-\qquad
-Y_t = X_t + \eta_t,
-\]
+**Xₜ = 0.9 Xₜ₋₁ + 0.5 εₜ, Yₜ = Xₜ + ηₜ**
 
 with an exact Kalman filter as the numerical benchmark.
 
@@ -26,13 +22,11 @@ A bootstrap particle filter is then implemented and parallelized with OpenMP.
 
 - The particle filter converges toward the Kalman solution at approximately the expected Monte Carlo rate,
 
-  \[
-  \mathrm{error} \sim N^{-1/2},
-  \]
+  **error ∝ N⁻¹ᐟ²**
 
   with an empirical log-log slope of approximately **-0.497**.
 
-- Particle propagation and likelihood evaluation scale well with OpenMP. At \(N=500{,}000\), the kernel achieved about **6.8× speedup on 16 threads**.
+- Particle propagation and likelihood evaluation scale well with OpenMP. At **N = 500,000**, the kernel achieved about **6.8× speedup on 16 threads**.
 
 - End-to-end scaling is much weaker, reaching only about **1.15×**, because multinomial resampling remains serial and eventually dominates the runtime.
 
@@ -97,7 +91,7 @@ The report is updated as each stage is completed.
 
 | Stage | Status |
 |---|---|
-| I - Linear-Gaussian benchmark and OpenMP particle filter | **Complete** |
+| I - SLinear-Gaussian benchmark and OpenMP particle filter | **Complete** |
 | II | In development |
 | III | Planned |
 | IV | Planned |
